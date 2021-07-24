@@ -1,11 +1,15 @@
 #pragma once
-#include<string>
-#include<iostream>
 #include <iomanip>
-class Student
-{
+#include <iostream>
+#include <string>
+class Student {
 public:
-    enum class Gender{male, female, other};
+    enum class Gender {
+        male,
+        female,
+        other
+    };
+
 private:
     std::string name_;
     std::string surname_;
@@ -14,12 +18,11 @@ private:
     unsigned long PESEL_;
     Gender gender_;
     std::string genderToString(Gender gender);
-    
+
 public:
-    
     Student();
-    Student(std::string name, std::string surname, std::string address,
-    unsigned long indexNumber, unsigned long PESEL, Gender gender);
+    Student(std::string name, std::string surname, std::string address, 
+    unsigned long indexNumber, unsigned long PESEL,Gender gender);
     Student(std::string name, std::string surname);
     void setName(std::string name);
     void setSurname(std::string surname);
@@ -34,6 +37,7 @@ public:
     unsigned long getIndexNumber() const;
     unsigned long getPESEL() const;
     Gender getGender() const;
-
+    Student& fillInStudentData();
     void showStudent();
 };
+
