@@ -2,7 +2,7 @@
 #include "Student.hpp"
 #include <string>
 #include <vector>
-
+void mainMenu();
 class UniversityDb 
 {
     std::string universityName_;
@@ -11,7 +11,8 @@ class UniversityDb
 public:
     UniversityDb();
     UniversityDb(std::string universityName);
-    void menu();
+    std::string getUniversityName() const;
+    void universityMenu();
     void addExistingStudent(Student student);
     void addNewStudent();
     void printUniversity();
@@ -24,4 +25,3 @@ public:
     void deleteByIndexNumber2(unsigned long indexNumber);
 };
 
-void mainMenu();
