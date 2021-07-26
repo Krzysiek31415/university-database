@@ -5,8 +5,8 @@
 void mainMenu();
 class UniversityDb 
 {
-    std::string universityName_;
-    std::vector<Student> university_;
+    std::string universityName_{};
+    std::vector<Student> university_{};
 
 public:
     UniversityDb();
@@ -23,5 +23,8 @@ public:
     void sortByPESEL();
     void deleteByIndexNumber(unsigned long indexNumber);
     void deleteByIndexNumber2(unsigned long indexNumber);
+    //void deleteUniversity(size_t number);
+
+    //bool isEmpty();
 };
 

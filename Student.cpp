@@ -18,29 +18,29 @@ std::string Student::genderToString(Student::Gender gender)
     }
 }
 
-Student::Student()
-{
-    std::cout<<"Adding new student: \n";
-    std::string name; 
-    std::string surname; 
-    std::string address; 
-    unsigned long indexNumber;
-    unsigned long PESEL; 
-    Student::Gender gender;
+// Student::Student()
+// {
+//     std::cout<<"Adding new student: \n";
+//     std::string name{}; 
+//     std::string surname{}; 
+//     std::string address{}; 
+//     unsigned long indexNumber{};
+//     unsigned long PESEL{}; 
+//     Student::Gender gender{};
 
-    std::cout<<"Name: "; std::cin>>name;
-    std::cout<<"Surname: "; std::cin>>surname;
-    std::cout<<"Address: "; std::cin>>std::ws;std::getline(std::cin,address);
-    std::cout<<"Index number: "; std::cin>>indexNumber;
-    std::cout<<"PESEL: "; std::cin>>PESEL;
+//     std::cout<<"Name: "; std::cin>>name;
+//     std::cout<<"Surname: "; std::cin>>surname;
+//     std::cout<<"Address: "; std::cin>>std::ws;std::getline(std::cin,address);
+//     std::cout<<"Index number: "; std::cin>>indexNumber;
+//     std::cout<<"PESEL: "; std::cin>>PESEL;
 
-    this->setName(name);
-    this->setSurname(surname);
-    this->setAddress(address);
-    this->setIndexNumber(indexNumber);
-    this->setPESEL(PESEL);
-    this->setGender(Gender::other);
-}
+//     this->setName(name);
+//     this->setSurname(surname);
+//     this->setAddress(address);
+//     this->setIndexNumber(indexNumber);
+//     this->setPESEL(PESEL);
+//     this->setGender(Gender::other);
+// }
 Student::Student(std::string name, std::string surname, std::string address, unsigned long indexNumber,
     unsigned long PESEL, Gender gender)
     : name_(name)
@@ -104,26 +104,26 @@ Student::Gender Student::getGender() const
 {
     return gender_;
 }
-Student& Student::fillInStudentData()
-{
-    std::string name; 
-    std::string surname; 
-    std::string address; 
-    unsigned long indexNumber;
-    unsigned long PESEL; 
-    Gender gender;
+// Student& Student::fillInStudentData()
+// {
+//     std::string name{}; 
+//     std::string surname{}; 
+//     std::string address{}; 
+//     unsigned long indexNumber{};
+//     unsigned long PESEL{}; 
+//     Gender gender{};
 
-    std::cout<<"Name: "; std::cin>>name;
-    std::cout<<"Surname: "; std::cin>>surname;
-    std::cout<<"Address: "; std::cin>>address;
-    std::cout<<"Index number: "; std::cin>>indexNumber;
-    std::cout<<"PESEL: "; std::cin>>PESEL;
-    //std::cout<<"Gender: "; std::cin>>gender;
-    Student student(name,surname,address,indexNumber,PESEL,Gender::male);
-    //std::cout<<"W student show student: \n";
-    //student.showStudent();
-    return *this;
-}
+//     std::cout<<"Name: "; std::cin>>name;
+//     std::cout<<"Surname: "; std::cin>>surname;
+//     std::cout<<"Address: "; std::cin>>address;
+//     std::cout<<"Index number: "; std::cin>>indexNumber;
+//     std::cout<<"PESEL: "; std::cin>>PESEL;
+//     //std::cout<<"Gender: "; std::cin>>gender;
+//     Student student(name,surname,address,indexNumber,PESEL,Gender::male);
+//     //std::cout<<"W student show student: \n";
+//     //student.showStudent();
+//     return *this;
+// }
 
 void Student::showStudent()
 {

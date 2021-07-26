@@ -6,10 +6,9 @@
 
 int main()
 {
-    while(true)
-    {
-        mainMenu();
-    }
+    
+    mainMenu();
+    
     
     // Student Pawel;
     // Student Jan("Jan", "Nowak");
