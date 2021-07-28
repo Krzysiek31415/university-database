@@ -7,8 +7,6 @@
 #include <vector>
 #include <iterator>
 
-
-
 UniversityDb::UniversityDb(std::string universityName)
     : universityName_(universityName)
 {
@@ -18,28 +16,9 @@ std::string UniversityDb:: getUniversityName() const
     return universityName_;
 }
 
-void UniversityDb::addExistingStudent(Student student)
-{
-    university_.push_back(student);
-}
-void UniversityDb::addNewStudent()
+void UniversityDb::addNewStudent(Student student)
 {
     std::cout<<"Adding new student: \n";
-    std::string name{}; 
-    std::string surname{}; 
-    std::string address{}; 
-    unsigned long indexNumber{};
-    unsigned long PESEL{}; 
-    Student::Gender gender{};
-
-    //wpisywanie rowniez biaych znakow
-    std::cout<<"Name: "; std::cin>>name;
-    std::cout<<"Surname: "; std::cin>>surname;
-    std::cout<<"Address: "; std::cin>>std::ws;std::getline(std::cin,address);
-    std::cout<<"Index number: "; std::cin>>indexNumber;
-    std::cout<<"PESEL: "; std::cin>>PESEL;
-    
-    Student student(name,surname,address,indexNumber,PESEL,Student::Gender::male);
     university_.push_back(student);
     
 }
@@ -66,14 +45,12 @@ void UniversityDb::printUniversity()
 void UniversityDb::searchBySurname(std::string surname)
 {
     size_t number {1};
-    //std::cout << "Search by Surname: " << surname << "\n";
     bool isNoSurname{true};
     for (auto student : university_) {
         if (student.getSurname() == surname) 
         {
             std::cout << number++ << ". ";
             student.showStudent();
-
             isNoSurname = false;
         }
     }
@@ -83,9 +60,8 @@ void UniversityDb::searchBySurname(std::string surname)
     }
 
 }
-void UniversityDb::searchByPESEL(unsigned long PESEL)
+void UniversityDb::searchByPESEL(std::string PESEL)
 {
-    //std::cout << "Search by PESEL: " << PESEL << "\n";
     bool isNoPESEL{true};
     for (auto student : university_) {
         if (student.getPESEL() == PESEL) 
@@ -100,7 +76,7 @@ void UniversityDb::searchByPESEL(unsigned long PESEL)
         std::cout<<"There is no such PESEL.\n";
     }
 }
-std::vector<Student>::iterator UniversityDb::searchByIndexNumber(unsigned long indexNumber)
+std::vector<Student>::iterator UniversityDb::searchByIndexNumber(std::string indexNumber)
 {
     std::cout << "Search by index number: " << indexNumber << "\n";
     for (auto it = university_.begin(); it != university_.end(); ++it) {
@@ -114,29 +90,15 @@ std::vector<Student>::iterator UniversityDb::searchByIndexNumber(unsigned long i
 }
 void UniversityDb::sortBySurname()
 {
-    //std::cout << "Sort by surname: "
-     //         << "\n";
-    
     std::sort(university_.begin(), university_.end(),
         [](const Student& lhs, const Student& rhs) { return lhs.getSurname() < rhs.getSurname(); });
-    // if(university_.empty())
-    // {
-    //     std::cout<<"Database is empty.\n";
-    // }    
 }
 void UniversityDb::sortByPESEL()
 {
-    //std::cout << "Sort by PESEL: "
-     //         << "\n";
-    
     std::sort(university_.begin(), university_.end(),
         [](const Student& lhs, const Student& rhs) { return lhs.getPESEL() < rhs.getPESEL(); });
-    // if(university_.empty())
-    // {
-    //     std::cout<<"Database is empty.\n";
-    // }
 }
-void UniversityDb::deleteByIndexNumber(unsigned long indexNumber)
+void UniversityDb::deleteByIndexNumber(std::string indexNumber)
 {
     std::cout << "Delete by index number: " << indexNumber << "\n";
     for (auto it = university_.begin(); it != university_.end(); ++it) {
@@ -145,9 +107,8 @@ void UniversityDb::deleteByIndexNumber(unsigned long indexNumber)
         }
     }
 }
-void UniversityDb::deleteByIndexNumber2(unsigned long indexNumber)
+void UniversityDb::deleteByIndexNumber2(std::string indexNumber)
 {
-    //std::cout << "Delete by index number: " << indexNumber << "\n";
     if(university_.empty())
     {
         return;
@@ -169,20 +130,32 @@ void mainMenu()
     bool exitMainMenu{};
     while(!exitMainMenu)
     {
-        std::cout<<"\n        MENU\n";
-        std::cout<<"1. Create new database.\n";
-        std::cout<<"2. Choose a database.\n";
-        std::cout<<"3. Delete database.\n";
-        std::cout<<"4. Exit.\n\n";
         static std::vector<UniversityDb> universities;
+        std::string position{};
+        do{
+            std::cout<<"\n        MENU\n";
+            std::cout<<"1. Create new database.\n";
+            std::cout<<"2. Choose a database.\n";
+            std::cout<<"3. Delete database.\n";
+            std::cout<<"4. Exit.\n\n";
+            //std::cout<<"4. Exit.\n\n"; save in file and read from file
+            std::cout<<"Select an option number: ";
+            std::cin >> position;
+            if(!isNumber(position))
+            {
+                std::cout << "Error. Please enter it again." << std::endl;
+            }
+            else
+            {
+                break;
+            }
+        }while(true);
         
-        int position{};
-        std::cin>>position;
-        switch(position)
+        switch(atoi(position.c_str()))
         {
             case 1:
             {
-                std::cout<<"    CREATING NEW UNIVERSITY DATABASE \n";
+                std::cout<<"            CREATING NEW UNIVERSITY DATABASE \n";
                 std::cout<<"Name of university: ";
                 std::string nameOfUniversity{};
                 std::cin>>std::ws; 
@@ -193,7 +166,7 @@ void mainMenu()
             }  
             case 2:
             {
-                std::cout<<"    CHOOSING A DATABASE \n";
+                std::cout<<"            CHOOSING A DATABASE \n";
                 if(universities.empty())
                 {
                     std::cout<<"There is no database.\n";
@@ -207,20 +180,13 @@ void mainMenu()
                     }
                     size_t selectionDatabase;
                     std::cin>>selectionDatabase;
-                    //bool exitUniversityMenu{};
-                // while(exitUniversityMenu)
-                // {
-                        universities[selectionDatabase-1].universityMenu();
-                //  }
-
+                    universities[selectionDatabase-1].universityMenu();
                     break;
-
-                }
-                
+                } 
             }
             case 3:
             {
-                std::cout<<"    DATABASE DELETION. \n";
+                std::cout<<"            DATABASE DELETION. \n";
                 if(universities.empty())
                 {
                     std::cout<<"    There is no database.\n";
@@ -234,19 +200,18 @@ void mainMenu()
                     }
                     size_t selectionDatabase;
                     std::cin>>selectionDatabase;
-                    
-                    //std::advance(universities.begin(),selectionDatabase-1);
                     universities.erase(universities.begin() + selectionDatabase - 1);
-                    
                 }
                 break;
             }
             case 4:
             {
                 exitMainMenu = true;
-                //std::exit(0);
             }
-                
+            default:
+            {
+                std::cout<<"Error. Please enter it again.\n";
+            }
         }
     }
 }
@@ -254,31 +219,38 @@ void mainMenu()
 void UniversityDb::universityMenu()
 {
     bool exitMenu{};
+    std::string position{};
     while(!exitMenu)
     {
-        std::cout<<"    "<<this->getUniversityName();
-        std::cout<<" MENU\n";
-        std::cout<<"1. Show database.\n";
-        std::cout<<"2. Add new student.\n";
-        std::cout<<"3. Sort by PESEL.\n";
-        std::cout<<"4. Sort by surname.\n";
-        std::cout<<"5. Search by surname.\n";
-        std::cout<<"6. Search by PESEL.\n";
-        std::cout<<"7. Delete by index number.\n";
-        std::cout<<"0. Go to the main menu.\n";
-        //std::cout<<". Go to the main menu.\n ";
-
-        int position{};
-        std::cin>>position;
-
-        switch(position)
+        do{
+            std::cout<<"    "<<this->getUniversityName();
+            std::cout<<" MENU\n";
+            std::cout<<"1. Show database.\n";
+            std::cout<<"2. Add new student.\n";
+            std::cout<<"3. Sort by PESEL.\n";
+            std::cout<<"4. Sort by surname.\n";
+            std::cout<<"5. Search by surname.\n";
+            std::cout<<"6. Search by PESEL.\n";
+            std::cout<<"7. Delete by index number.\n";
+            std::cout<<"0. Go to the main menu.\n";
+            //std::cout<<"4. Exit.\n\n"; save in file and read from file
+            std::cout<<"Select an option number: ";
+            std::cin >> position;
+            if(!isNumber(position))
+            {
+                std::cout << "Error. Please enter it again." << std::endl;
+            }
+            else
+            {
+                break;
+            }
+        }while(true);
+        switch(atoi(position.c_str()))
         {
             case 1:
             {
                 std::cout<<"    "<<this->getUniversityName()<<"\n";
-                //std::cout<<"Name of university: \n";
                 this->printUniversity();
-                //std::cout<<"\n";
                 if(university_.empty())
                 {
                     std::cout<<"        University database is empty. \n\n";
@@ -288,7 +260,9 @@ void UniversityDb::universityMenu()
             case 2:
             {
                 std::cout<<"    "<<this->getUniversityName()<<"\n";
-                this->addNewStudent();
+                Student student;
+                student.fillInStudentData();
+                this->addNewStudent(student);
                 break;
             } 
             case 3:
@@ -320,22 +294,20 @@ void UniversityDb::universityMenu()
                 std::cin>>std::ws; 
                 std::getline(std::cin, surname);
                 this->searchBySurname(surname);
-                //this->printUniversity();
                 break;
             }
             case 6:
             {
                 std::cout<<"Search by PESEL:";
-                unsigned long PESEL{};;
+                std::string PESEL{};;
                 std::cin>>PESEL;
                 this->searchByPESEL(PESEL);
-                //this->printUniversity();
                 break;
             }
             case 7:
             {
                 std::cout<<"Delete by index number: ";
-                unsigned long indexNumber{};;
+                std::string indexNumber{};;
                 std::cin>>indexNumber;
                 this->deleteByIndexNumber2(indexNumber);
                 break;
@@ -344,7 +316,10 @@ void UniversityDb::universityMenu()
             {
                 exitMenu = true;
             }
+            default:
+            {
+                std::cout<<"Error. Please enter it again.\n";
+            }
         }
     }
-    
 }

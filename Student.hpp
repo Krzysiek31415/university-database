@@ -2,9 +2,11 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
-class Student {
+class Student 
+{
 public:
-    enum class Gender {
+    enum class Gender 
+    {
         male,
         female,
         other
@@ -14,30 +16,33 @@ private:
     std::string name_{};
     std::string surname_{};
     std::string address_{};
-    unsigned long indexNumber_{};
-    unsigned long PESEL_{};
+    std::string indexNumber_{};
+    std::string PESEL_{};
     Gender gender_{};
     std::string genderToString(Gender gender);
 
 public:
-    //Student();
-    Student(std::string name, std::string surname, std::string address, 
-    unsigned long indexNumber, unsigned long PESEL,Gender gender);
-    Student(std::string name, std::string surname);
-    void setName(std::string name);
-    void setSurname(std::string surname);
-    void setAddress(std::string address);
-    void setIndexNumber(unsigned long indexNumber);
-    void setPESEL(unsigned long PESEL);
-    void setGender(Gender gender);
+    Student(std::string name="", std::string surname="", std::string address="", 
+    std::string indexNumber="", std::string PESEL="",Gender gender=Student::Gender::other);
+    //Student(std::string name="", std::string surname="");
+    friend Gender charToEnum(const char genderAbbreviation);
+    friend bool isNumber(const std::string& s);
+    // void setName(std::string name);
+    // void setSurname(std::string surname);
+    // void setAddress(std::string address);
+    // void setIndexNumber(std::string indexNumber);
+    // void setPESEL(std::string PESEL);
+    // void setGender(Gender gender);
 
     std::string getName() const;
     std::string getSurname() const;
     std::string getAddress() const;
-    unsigned long getIndexNumber() const;
-    unsigned long getPESEL() const;
+    std::string getIndexNumber() const;
+    std::string getPESEL() const;
     Gender getGender() const;
-    //Student& fillInStudentData();
+    Student& fillInStudentData();
     void showStudent();
 };
+
+bool isNumber(const std::string& numberString);
 

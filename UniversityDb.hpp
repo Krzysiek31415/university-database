@@ -13,18 +13,16 @@ public:
     UniversityDb(std::string universityName);
     std::string getUniversityName() const;
     void universityMenu();
-    void addExistingStudent(Student student);
-    void addNewStudent();
+    //void addExistingStudent(Student student);
+    void addNewStudent(Student student);
     void printUniversity();
     void searchBySurname(std::string surname);
-    void searchByPESEL(unsigned long PESEL);
-    std::vector<Student>::iterator searchByIndexNumber(unsigned long indexNumber);
+    void searchByPESEL(std::string PESEL);
+    std::vector<Student>::iterator searchByIndexNumber(std::string indexNumber);
     void sortBySurname();
     void sortByPESEL();
-    void deleteByIndexNumber(unsigned long indexNumber);
-    void deleteByIndexNumber2(unsigned long indexNumber);
-    //void deleteUniversity(size_t number);
+    void deleteByIndexNumber(std::string indexNumber);
+    void deleteByIndexNumber2(std::string indexNumber);
 
-    //bool isEmpty();
 };
 
