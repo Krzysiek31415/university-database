@@ -15,12 +15,13 @@ std::string UniversityDb:: getUniversityName() const
 {
     return universityName_;
 }
-
+std::vector<Student>& UniversityDb::getUniversityVector() 
+{
+    return university_;
+}
 void UniversityDb::addNewStudent(Student student)
 {
-    std::cout<<"Adding new student: \n";
     university_.push_back(student);
-    
 }
 void UniversityDb::printUniversity()
 {
@@ -42,13 +43,15 @@ void UniversityDb::printUniversity()
     std::cout<<"\n";
 }
 
-void UniversityDb::searchBySurname(std::string surname)
+std::vector<Student> UniversityDb::searchBySurname(std::string surname)
 {
+    std::vector<Student> students{};
     size_t number {1};
     bool isNoSurname{true};
     for (auto student : university_) {
         if (student.getSurname() == surname) 
         {
+            students.push_back(student);
             std::cout << number++ << ". ";
             student.showStudent();
             isNoSurname = false;
@@ -58,14 +61,16 @@ void UniversityDb::searchBySurname(std::string surname)
     {
         std::cout<<"There is no such surname.\n";
     }
-
+    return students;
 }
-void UniversityDb::searchByPESEL(std::string PESEL)
+Student UniversityDb::searchByPESEL(std::string PESEL)
 {
+    Student person;
     bool isNoPESEL{true};
     for (auto student : university_) {
         if (student.getPESEL() == PESEL) 
         {
+            person = student;
             std::cout << "1. ";
             student.showStudent();
             isNoPESEL = false;
@@ -75,6 +80,7 @@ void UniversityDb::searchByPESEL(std::string PESEL)
     {
         std::cout<<"There is no such PESEL.\n";
     }
+    return person;
 }
 std::vector<Student>::iterator UniversityDb::searchByIndexNumber(std::string indexNumber)
 {
@@ -115,6 +121,7 @@ void UniversityDb::deleteByIndexNumber2(std::string indexNumber)
     }
     auto it = std::find_if(university_.begin(), university_.end(),
         [&indexNumber](const Student& obj) { return obj.getIndexNumber() == indexNumber; });
+    std::cout<<"Deleted student: ";
     it->showStudent();
     if (it != university_.end())
         university_.erase(it);
@@ -261,6 +268,7 @@ void UniversityDb::universityMenu()
             {
                 std::cout<<"    "<<this->getUniversityName()<<"\n";
                 Student student;
+                std::cout<<"Adding new student: \n";
                 student.fillInStudentData();
                 this->addNewStudent(student);
                 break;
@@ -321,5 +329,31 @@ void UniversityDb::universityMenu()
                 std::cout<<"Error. Please enter it again.\n";
             }
         }
+    }
+}
+bool operator== (UniversityDb & one,UniversityDb & two)
+{
+    bool theSame{};
+    
+    bool theSameAmountElements = (one.getUniversityVector().size() == two.getUniversityVector().size());
+
+    if(theSameAmountElements)
+    {
+        bool theSameElements{};
+        size_t amountStudents = one.getUniversityVector().size();
+        for(size_t n = 0; n <= amountStudents; n++)
+        {
+            if( !(one.getUniversityVector().at(n) == two.getUniversityVector().at(n)) )
+            {
+                return theSame;
+            }
+        }
+        theSame = true;
+        return theSame;
+        
+    }
+    else
+    {
+        return theSame;
     }
 }

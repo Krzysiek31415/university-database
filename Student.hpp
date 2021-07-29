@@ -42,6 +42,7 @@ public:
     Gender getGender() const;
     Student& fillInStudentData();
     void showStudent();
+    friend bool operator== (const Student & one,const Student & two);
 };
 
 bool isNumber(const std::string& numberString);

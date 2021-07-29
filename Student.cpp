@@ -140,4 +140,21 @@ void Student::showStudent()
     std::cout << std::left << std::setw(13) << genderToString(getGender()) << "| \n";
 }
 
+bool operator== (const Student & one,const Student & two)
+{
+    if(one.getName() == two.getName() &&
+        one.getSurname() == two.getSurname() &&
+        one.getAddress() == two.getAddress() &&
+        one.getPESEL() == two.getPESEL() &&
+        one.getIndexNumber() == two.getIndexNumber() &&
+        one.getGender() == two.getGender()
+    )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
