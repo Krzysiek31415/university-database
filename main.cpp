@@ -3,11 +3,8 @@
 #include "myTests.hpp"
 #include <iostream>
 
-
-
-int main()
-{   
-   
+void tests()
+{
     std::cout<<"Sorted by surname: "             <<sortBySurnameTest()<<std::endl;
     std::cout<<"Sorted by PESEL: "               <<sortByPESELTest()<<std::endl;
     std::cout<<"Add new student: "               <<addStudentTest()<<std::endl;
@@ -17,6 +14,15 @@ int main()
     
     std::cout<<"Show database: \n";
     showDatabaseTest();
+}
+
+
+int main()
+{   
+    //tests();
+    mainMenu();
+
+    
     
     return 0;
 }
