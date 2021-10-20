@@ -2,6 +2,7 @@
 #include "Student.hpp"
 #include <string>
 #include <vector>
+
 void mainMenu();
 class UniversityDb 
 {
@@ -14,7 +15,6 @@ public:
     std::string getUniversityName() const;
     std::vector<Student>& getUniversityVector();
     void universityMenu();
-    //void addExistingStudent(Student student);
     void addNewStudent(Student student);
     void printUniversity();
     std::vector<Student> searchBySurname(std::string surname);
@@ -24,6 +24,5 @@ public:
     void sortByPESEL();
     void deleteByIndexNumber(std::string indexNumber);
     void deleteByIndexNumber2(std::string indexNumber);
-    friend bool operator== (const UniversityDb & one, const UniversityDb & two);
 };
 

@@ -2,28 +2,6 @@
 #include <string>
 #include <cctype>
 #include <algorithm>
-bool isNumber(const std::string& numberString)
-{
-    return !numberString.empty() && std::find_if(numberString.begin(), 
-        numberString.end(), [](unsigned char c) { return !std::isdigit(c); }) == numberString.end();
-}
-std::string Student::genderToString(Student::Gender gender)
-{
-    switch (gender) 
-    {
-    case Student::Gender::male :
-        return "male";
-        break;
-    case Student::Gender::female :
-        return "female";
-        break;
-    case Student::Gender::other :
-        return "other";
-        break;
-    default:
-        return "";
-    }
-}
 
 Student::Gender charToEnum(const char genderAbbreviation)
 {
@@ -41,15 +19,23 @@ Student::Gender charToEnum(const char genderAbbreviation)
     }
 }
 
+
 Student::Student(std::string name, std::string surname, std::string address, std::string indexNumber,
     std::string PESEL, Gender gender)
     : name_(name)
     , surname_(surname)
     , address_(address)
-    , indexNumber_(indexNumber)
-    , PESEL_(PESEL)
     , gender_(gender)
 {
+    setPESEL(PESEL);
+    setIndexNumber(indexNumber);
+}
+
+bool Student::validatePESEL(std::string & PESEL)
+{
+    // here check conditions
+    // loop with check if zmienna is number
+    return isNumber(PESEL);
 }
 // Student::Student(std::string name, std::string surname)
 //     : Student(name, surname, "", 0UL, 0UL, Gender::other)
@@ -68,14 +54,36 @@ Student::Student(std::string name, std::string surname, std::string address, std
 // {
 //     address_ = address;
 // }
-// void Student::setIndexNumber(std::string indexNumber)
-// {
-//     indexNumber_ = indexNumber;
-// }
-// void Student::setPESEL(std::string PESEL)
-// {
-//     PESEL_ = PESEL;
-// }
+void Student::setIndexNumber(std::string & indexNumber)
+{
+    while(!isNumber(indexNumber))
+    {
+        std::cout << "Incorrect index number, enter again" << '\n';
+        std::cout << "Index number: "; std::cin >> std::ws; 
+        std::getline(std::cin, indexNumber);
+    }
+    indexNumber_ = indexNumber;
+}
+
+void Student::setPESEL(std::string & PESEL)
+{
+    if(validatePESEL(PESEL))
+    {
+        PESEL_ = PESEL;
+    }
+    else
+    {
+        do
+        {
+            std::cout << "Incorrect pesel, enter again" << '\n';
+            std::cout << "PESEL: "; std::cin >> std::ws; 
+            std::getline(std::cin, PESEL);
+        } while (!validatePESEL(PESEL));
+        PESEL = PESEL;
+    }
+    
+}
+
 // void Student::setGender(Gender gender)
 // {
 //     gender_ = gender;
@@ -105,6 +113,7 @@ Student::Gender Student::getGender() const
 {
     return gender_;
 }
+
 Student& Student::fillInStudentData()
 {
     
@@ -157,4 +166,32 @@ bool operator== (const Student & one,const Student & two)
         return false;
     }
 }
+
+bool isNumber(std::string & numberString)
+{
+    return !numberString.empty() && 
+            std::find_if(numberString.begin(), 
+                         numberString.end(), 
+                         [](unsigned char c) { return !std::isdigit(c); }) == numberString.end();
+}
+
+std::string Student::genderToString(Student::Gender gender)
+{
+    switch (gender) 
+    {
+    case Student::Gender::male :
+        return "male";
+        break;
+    case Student::Gender::female :
+        return "female";
+        break;
+    case Student::Gender::other :
+        return "other";
+        break;
+    default:
+        return "";
+    }
+}
+
+
 

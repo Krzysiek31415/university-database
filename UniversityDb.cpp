@@ -188,8 +188,8 @@ void mainMenu()
                     size_t selectionDatabase;
                     std::cin>>selectionDatabase;
                     universities[selectionDatabase-1].universityMenu();
-                    break;
                 } 
+                break;
             }
             case 3:
             {
@@ -214,10 +214,12 @@ void mainMenu()
             case 4:
             {
                 exitMainMenu = true;
+                break;
             }
             default:
             {
                 std::cout<<"Error. Please enter it again.\n";
+                break;
             }
         }
     }
@@ -323,37 +325,13 @@ void UniversityDb::universityMenu()
             case 0:
             {
                 exitMenu = true;
+                break;
             }
             default:
             {
                 std::cout<<"Error. Please enter it again.\n";
+                break;
             }
         }
-    }
-}
-bool operator== (UniversityDb & one,UniversityDb & two)
-{
-    bool theSame{};
-    
-    bool theSameAmountElements = (one.getUniversityVector().size() == two.getUniversityVector().size());
-
-    if(theSameAmountElements)
-    {
-        bool theSameElements{};
-        size_t amountStudents = one.getUniversityVector().size();
-        for(size_t n = 0; n <= amountStudents; n++)
-        {
-            if( !(one.getUniversityVector().at(n) == two.getUniversityVector().at(n)) )
-            {
-                return theSame;
-            }
-        }
-        theSame = true;
-        return theSame;
-        
-    }
-    else
-    {
-        return theSame;
     }
 }
