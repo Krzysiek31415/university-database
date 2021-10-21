@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+std::vector<std::string> Gender= std::vector<std::string>{"male", "female", "other"};
 
 bool isNumber(const std::string & numberString)
 {
@@ -15,25 +16,25 @@ bool isNumber(const std::string & numberString)
                          [](unsigned char c) { return !std::isdigit(c); }) == numberString.end();
 }
 
-Student::Gender charToEnum(const char genderAbbreviation)
-{
-    switch(genderAbbreviation)
-    {
-        case 'm':
-            return Student::Gender::male;
-        case 'f':
-            return Student::Gender::female;
-        case 'o':
-            return Student::Gender::other;
-        default:
-            return Student::Gender::other;
+// Student::Gender charToEnum(const char genderAbbreviation)
+// {
+//     switch(genderAbbreviation)
+//     {
+//         case 'm':
+//             return Student::Gender::male;
+//         case 'f':
+//             return Student::Gender::female;
+//         case 'o':
+//             return Student::Gender::other;
+//         default:
+//             return Student::Gender::other;
 
-    }
-}
+//     }
+// }
 
 
 Student::Student(const std::string & name, const std::string & surname, const std::string & address, const std::string & indexNumber,
-    const std::string & PESEL, Gender gender)
+    const std::string & PESEL, const std::string & gender)
     : name_(name)
     , surname_(surname)
     , address_(address)
@@ -41,6 +42,13 @@ Student::Student(const std::string & name, const std::string & surname, const st
 {
     setPESEL(PESEL);
     setIndexNumber(indexNumber);
+    studentData.push_back(&name_);
+    studentData.push_back(&surname_);
+    studentData.push_back(&address_);
+    studentData.push_back(&indexNumber_);
+    studentData.push_back(&PESEL_);
+    studentData.push_back(&gender_);
+
 }
 
 
@@ -107,28 +115,6 @@ void Student::setPESEL(const std::string & PESEL)
     {
         throw std::logic_error("Incorrect input. Incorrect PESEL.");
     }
-
-    
-    // while(!isNumber(PESEL))
-    // {
-
-    // }
-
-    // if(validatePESEL(PESEL))
-    // {
-    //     PESEL_ = PESEL;
-    // }
-    // else
-    // {
-    //     do
-    //     {
-    //         std::cout << "Incorrect pesel, enter again" << '\n';
-    //         std::cout << "PESEL: "; std::cin >> std::ws; 
-    //         std::getline(std::cin, PESEL);
-    //     } while (!validatePESEL(PESEL));
-    //     PESEL = PESEL;
-    // }
-    
 }
 
 // void Student::setGender(Gender gender)
@@ -156,7 +142,7 @@ std::string Student::getPESEL() const
 {
     return PESEL_;
 }
-Student::Gender Student::getGender() const
+std::string  Student::getGender() const
 {
     return gender_;
 }
@@ -179,21 +165,25 @@ Student& Student::fillInStudentData()
         std::cout<<"Error. It is not a PESEL. Please enter it again. \n";
         std::cout<<"PESEL number: "; std::cin>>std::ws;std::getline(std::cin, PESEL_);
     }
-    std::cout<<"Gender [male - m, female - f, other - o]: "; 
-    char genderAbbreviation{};
-    std::cin>>genderAbbreviation;
-    gender_ = charToEnum(genderAbbreviation);
+    std::cout<<"Gender [male - m, female - f, other - o]: ";
+    std::cin>>std::ws;std::getline(std::cin,gender_);
     return *this;
 }
 
-void Student::showStudent()
+std::string Student::showStudent()
 {
     std::cout << std::left << std::setw(13) << getName() << "| ";
     std::cout << std::left << std::setw(13) << getSurname() << "| ";
     std::cout << std::left << std::setw(13) << getAddress() << "| ";
     std::cout << std::left << std::setw(13) << getIndexNumber() << "| ";
     std::cout << std::left << std::setw(13) << getPESEL() << "| ";
-    std::cout << std::left << std::setw(13) << genderToString(getGender()) << "| \n";
+    std::cout << std::left << std::setw(13) << getGender() << "| \n";
+
+    std::string studentData;
+    studentData += getName() + "|" + getSurname() + "|" + getAddress() + "|" +
+                getIndexNumber() + "|" + getPESEL() + "|" + getGender();
+
+    return studentData;
 }
 
 bool operator== (const Student & one,const Student & two)
@@ -214,23 +204,23 @@ bool operator== (const Student & one,const Student & two)
     }
 }
 
-std::string Student::genderToString(Student::Gender gender)
-{
-    switch (gender) 
-    {
-    case Student::Gender::male :
-        return "male";
-        break;
-    case Student::Gender::female :
-        return "female";
-        break;
-    case Student::Gender::other :
-        return "other";
-        break;
-    default:
-        return "";
-    }
-}
+// std::string Student::genderToString(Student::Gender gender)
+// {
+//     switch (gender) 
+//     {
+//     case Student::Gender::male :
+//         return "male";
+//         break;
+//     case Student::Gender::female :
+//         return "female";
+//         break;
+//     case Student::Gender::other :
+//         return "other";
+//         break;
+//     default:
+//         return "";
+//     }
+// }
 
 
 

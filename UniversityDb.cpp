@@ -1,11 +1,32 @@
 #include "UniversityDb.hpp"
 #include "Student.hpp"
 #include <algorithm>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <iterator>
 #include <string>
 #include <vector>
-#include <iterator>
+
+//void UniversityDb::writeToFile()
+void writeToFile(UniversityDb * university)
+{
+    std::fstream database;
+    database.open("../data/nowy_plik.txt", std::ios::out | std::ios::trunc); //, std::ios::out | std::ios::trunc);
+    if(database.good())
+    {
+        database << university->getUniversityName() << '\n';
+        for(auto student: university->getUniversityVector())
+        {
+            student.showStudent();
+        }
+        database.close();
+    }
+    else
+    {
+        std::cout<< "File open error.\n";
+    }
+}
 
 UniversityDb::UniversityDb(std::string universityName)
     : universityName_(universityName)
@@ -19,7 +40,7 @@ std::vector<Student>& UniversityDb::getUniversityVector()
 {
     return university_;
 }
-void UniversityDb::addNewStudent(Student student)
+void UniversityDb::addNewStudent(const Student & student)
 {
     university_.push_back(student);
 }
@@ -189,7 +210,7 @@ void mainMenu()
                     size_t n{};
                     for(auto elem: universities)
                     {
-                        std::cout<<++n<<". "<<elem.getUniversityName()<<"\n";
+                        std::cout<< ++n <<". "<<elem.getUniversityName()<<"\n";
                     }
                     size_t selectionDatabase;
                     std::cin>>selectionDatabase;
@@ -247,6 +268,7 @@ void UniversityDb::universityMenu()
             std::cout<<"5. Search by surname.\n";
             std::cout<<"6. Search by PESEL.\n";
             std::cout<<"7. Delete by index number.\n";
+            std::cout<<"8. Save database to file.\n";
             std::cout<<"0. Go to the main menu.\n";
             //std::cout<<"4. Exit.\n\n"; save in file and read from file
             std::cout<<"Select an option number: ";
@@ -260,6 +282,7 @@ void UniversityDb::universityMenu()
                 break;
             }
         }while(true);
+
         switch(atoi(position.c_str()))
         {
             case 1:
@@ -315,7 +338,7 @@ void UniversityDb::universityMenu()
             case 6:
             {
                 std::cout<<"Search by PESEL:";
-                std::string PESEL{};;
+                std::string PESEL{};
                 std::cin>>PESEL;
                 this->searchByPESEL(PESEL);
                 break;
@@ -326,6 +349,14 @@ void UniversityDb::universityMenu()
                 std::string indexNumber{};;
                 std::cin>>indexNumber;
                 this->deleteByIndexNumber2(indexNumber);
+                break;
+            }
+            case 8:
+            {
+                std::cout<<"Save database to file: ";
+                // std::string name{};
+                // std::cin>>name;
+                writeToFile(this);
                 break;
             }
             case 0:
@@ -341,3 +372,8 @@ void UniversityDb::universityMenu()
         }
     }
 }
+
+// void UniversityDb::readFromFile(const std::string & fileName)
+// {
+
+// }

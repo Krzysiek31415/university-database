@@ -15,7 +15,7 @@ public:
     std::string getUniversityName() const;
     std::vector<Student>& getUniversityVector();
     void universityMenu();
-    void addNewStudent(Student student);
+    void addNewStudent(const Student &student);
     void printUniversity();
     std::vector<Student> searchBySurname(std::string surname);
     Student searchByPESEL(std::string PESEL);
@@ -24,5 +24,9 @@ public:
     void sortByPESEL();
     void deleteByIndexNumber(std::string indexNumber);
     void deleteByIndexNumber2(std::string indexNumber);
+    friend void writeToFile(UniversityDb * university);
+    void readFromFile(const std::string & fileName);
 };
+
+
 

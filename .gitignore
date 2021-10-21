@@ -51,3 +51,4 @@ googletest/
 *.app
 
 temp.cpp
+data
