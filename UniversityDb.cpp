@@ -45,6 +45,7 @@ void UniversityDb::printUniversity()
 
 std::vector<Student> UniversityDb::searchBySurname(std::string surname)
 {
+    // make stl
     std::vector<Student> students{};
     size_t number {1};
     bool isNoSurname{true};
@@ -65,6 +66,7 @@ std::vector<Student> UniversityDb::searchBySurname(std::string surname)
 }
 Student UniversityDb::searchByPESEL(std::string PESEL)
 {
+    // make stl
     Student person;
     bool isNoPESEL{true};
     for (auto student : university_) {
@@ -84,6 +86,7 @@ Student UniversityDb::searchByPESEL(std::string PESEL)
 }
 std::vector<Student>::iterator UniversityDb::searchByIndexNumber(std::string indexNumber)
 {
+    // make stl
     std::cout << "Search by index number: " << indexNumber << "\n";
     for (auto it = university_.begin(); it != university_.end(); ++it) {
         if (it->getIndexNumber() == indexNumber) {
@@ -106,6 +109,8 @@ void UniversityDb::sortByPESEL()
 }
 void UniversityDb::deleteByIndexNumber(std::string indexNumber)
 {
+    // leve one version
+    // make stl
     std::cout << "Delete by index number: " << indexNumber << "\n";
     for (auto it = university_.begin(); it != university_.end(); ++it) {
         if (it->getIndexNumber() == indexNumber) {
@@ -115,6 +120,7 @@ void UniversityDb::deleteByIndexNumber(std::string indexNumber)
 }
 void UniversityDb::deleteByIndexNumber2(std::string indexNumber)
 {
+    //use stl
     if(university_.empty())
     {
         return;

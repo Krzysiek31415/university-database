@@ -3,6 +3,13 @@
 #include "myTests.hpp"
 #include <iostream>
 
+#include <algorithm>
+#include <cctype>
+#include "Student.hpp"
+#include <string>
+#include <vector>
+#include <numeric>
+
 void tests()
 {
     std::cout<<"Sorted by surname: "             <<sortBySurnameTest()<<std::endl;
@@ -21,6 +28,16 @@ int main()
 {   
     //tests();
     mainMenu();
+    try
+    {
+        Student Patryk("Patryk", "Burak", "Pichorowice 37", "123456", "90052904377", Student::Gender::male);
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+    
 
     
     

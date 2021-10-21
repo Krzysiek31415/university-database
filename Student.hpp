@@ -14,8 +14,9 @@ public:
     };
 
 public:
-    Student(std::string name="", std::string surname="", std::string address="", 
-    std::string indexNumber="", std::string PESEL="",Gender gender=Student::Gender::other);
+    Student(){}
+    Student(const std::string & name, const std::string & surname, const std::string & address, const std::string & indexNumber,
+    const std::string & PESEL, Gender gender=Student::Gender::other);
 
     friend Gender charToEnum(const char genderAbbreviation);
     friend bool isNumber(const std::string& s);
@@ -27,8 +28,8 @@ public:
     std::string getPESEL() const;
     Gender getGender() const;
 
-    void setPESEL(std::string & PESEL);
-    void setIndexNumber(std::string & indexNumber);
+    void setPESEL(const std::string & PESEL);
+    void setIndexNumber(const std::string & indexNumber);
 
     Student& fillInStudentData();
     void showStudent();
@@ -44,8 +45,8 @@ private:
     Gender gender_{};
 
     std::string genderToString(Gender gender);
-    bool validatePESEL(std::string & PESEL);
+    bool validatePESEL(const std::string & PESEL);
 };
 
-bool isNumber(std::string& numberString);
+bool isNumber(const std::string& numberString);
 

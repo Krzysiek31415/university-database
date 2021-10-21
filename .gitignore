@@ -49,3 +49,5 @@ googletest/
 *.exe
 *.out
 *.app
+
+temp.cpp
