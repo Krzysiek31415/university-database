@@ -6,6 +6,10 @@
 #include <string>
 #include <vector>
 
+
+// add static size_t numberStudents; in constructor inc, in d-tor dec;
+// add class File{}, load to file, writ to file, parseString to vector, c-tor, d-tor,
+//                   add pole std::fstream
 class Student 
 {
 public:

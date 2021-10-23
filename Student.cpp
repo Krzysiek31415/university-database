@@ -196,6 +196,7 @@ void Student::showStudent()
     {
         std::cout << std::left << std::setw(13) << *data << "| ";
     }
+    std::cout << '\n';
 }
 
 bool operator== (const Student & one,const Student & two)

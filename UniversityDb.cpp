@@ -35,19 +35,40 @@ void UniversityDb::writeToFile(const std::string & fileName)
 
 void UniversityDb::loadFromFile(const std::string & fileName)
 {
+    //change fileName to path
     std::fstream file; 
     file.open("../data/"+fileName, std::ios::in ); //, std::ios::out | std::ios::trunc);
     if(file.good())
     {
         std::string line;
-        size_t lineNr{};
-        while(std::getline(file,line))
+        //size_t lineNr{};
+        while(!file.eof())
         {
-            if(lineNr)
+            std::getline(file,line);
+            // if(lineNr++ == 0)
+            // {
+            //     continue;
+            // }
+            //std::cout << line << '\n';
+            // make function parseString
+            std::vector<std::string> data;
+            size_t beginData{};
+            size_t endData{};
+            //int i{};
+            while(endData != std::string::npos)// || endData < line.size())
             {
-                continue;
+                endData = line.find("|", beginData);
+                //std::cout<<beginData<<" "<<endData<<'\n';
+                data.push_back(line.substr(beginData, endData-beginData));
+                beginData = endData + 1; 
+                //std::cout<<data[i++]<<'\n';
+                if(endData == line.size()-1)
+                    break;
+                
             }
-            std::cout << line << '\n';
+            std::shared_ptr<Student> student{new Student{ data[0], data[1], data[2], data[3], data[4], data[5]}};
+            this->addNewStudent(student);
+            
         }
         file.close();
     }
@@ -56,6 +77,7 @@ void UniversityDb::loadFromFile(const std::string & fileName)
         std::cout<< "File open error.\n";
     }
 }
+
 
 UniversityDb::UniversityDb(std::string universityName)
     : universityName_(universityName)
