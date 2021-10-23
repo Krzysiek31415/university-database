@@ -1,12 +1,14 @@
 #include <algorithm>
 #include <cctype>
 #include <exception>
+#include <memory>
 #include <numeric>
 #include "Student.hpp"
 #include <string>
 #include <vector>
+// add change student data
 
-std::vector<std::string> Gender= std::vector<std::string>{"male", "female", "other"};
+std::map<char,std::string> Student::Gender{{'m',"male"},{'f',"female"}, {'o',"other"}};
 
 bool isNumber(const std::string & numberString)
 {
@@ -16,41 +18,23 @@ bool isNumber(const std::string & numberString)
                          [](unsigned char c) { return !std::isdigit(c); }) == numberString.end();
 }
 
-// Student::Gender charToEnum(const char genderAbbreviation)
-// {
-//     switch(genderAbbreviation)
-//     {
-//         case 'm':
-//             return Student::Gender::male;
-//         case 'f':
-//             return Student::Gender::female;
-//         case 'o':
-//             return Student::Gender::other;
-//         default:
-//             return Student::Gender::other;
-
-//     }
-// }
-
-
 Student::Student(const std::string & name, const std::string & surname, const std::string & address, const std::string & indexNumber,
     const std::string & PESEL, const std::string & gender)
     : name_(name)
     , surname_(surname)
     , address_(address)
-    , gender_(gender)
 {
     setPESEL(PESEL);
     setIndexNumber(indexNumber);
-    studentData.push_back(&name_);
-    studentData.push_back(&surname_);
-    studentData.push_back(&address_);
-    studentData.push_back(&indexNumber_);
-    studentData.push_back(&PESEL_);
-    studentData.push_back(&gender_);
+    setGender(gender);
+    studentData_.push_back(&name_);
+    studentData_.push_back(&surname_);
+    studentData_.push_back(&address_);
+    studentData_.push_back(&indexNumber_);
+    studentData_.push_back(&PESEL_);
+    studentData_.push_back(&gender_);
 
 }
-
 
 bool Student::validatePESEL(const std::string & PESEL)
 {
@@ -65,6 +49,7 @@ bool Student::validatePESEL(const std::string & PESEL)
     long long sum = std::inner_product(coefficients.begin(),
                                        coefficients.end(),
                                        PESELnumbers.begin(), 0);
+    return true;
     if( ( PESEL.back() - '0' ) == 0)
     {
         return ( sum % 10 ) == 0;
@@ -75,52 +60,44 @@ bool Student::validatePESEL(const std::string & PESEL)
     }
 }
 
-// Student::Student(std::string name, std::string surname)
-//     : Student(name, surname, "", 0UL, 0UL, Gender::other)
-// {
-// }
-
-// void Student::setName(std::string name)
-// {
-//     name_ = name;
-// }
-// void Student::setSurname(std::string surname)
-// {
-//     surname_ = surname;
-// }
-// void Student::setAddress(std::string address)
-// {
-//     address_ = address;
-// }
-
-void Student::setIndexNumber(const std::string & indexNumber)
+bool Student::setIndexNumber(const std::string & indexNumber)
 {
     if(isNumber(indexNumber))
     {
         indexNumber_ = indexNumber;
+        return true;
     }
     else
     {
-        throw std::logic_error("Incorrect input. IndexNumber not a number.");
+        return false;
     }
 }
 
-void Student::setPESEL(const std::string & PESEL)
+bool Student::setPESEL(const std::string & PESEL)
 {
     if(validatePESEL(PESEL))
     {
         PESEL_ = PESEL;
+        return true;
     }
     else
     {
-        throw std::logic_error("Incorrect input. Incorrect PESEL.");
+        return false;
     }
 }
 
-// void Student::setGender(Gender gender)
-// {
-//     gender_ = gender;
-// }
+void Student::setGender(const std::string & gender)
+{
+    if(gender.size() != 1 || (gender[0] != 'm' && gender[0] != 'f'))
+    {
+        gender_ = Gender['o'];
+    }
+    else
+    {
+        gender_ = Gender[gender[0]];
+    }
+    
+}
 
 std::string Student::getName() const
 {
@@ -146,44 +123,79 @@ std::string  Student::getGender() const
 {
     return gender_;
 }
+std::vector<std::string *> Student::getStudentData() const
+{
+    return studentData_;
+}
 
 Student& Student::fillInStudentData()
 {
-    
-    std::cout<<"Name: "; std::cin>>std::ws;std::getline(std::cin,name_);
-    std::cout<<"Surname: "; std::cin>>std::ws;std::getline(std::cin,surname_);
-    std::cout<<"Address: "; std::cin>>std::ws;std::getline(std::cin,address_);
-    std::cout<<"Index number: "; std::cin>>std::ws;std::getline(std::cin, indexNumber_);
-    while(!isNumber(indexNumber_))
+    std::vector<std::string> descriptionStudentData{"Name: ", "Surname: ", "Address: ", "Index number: ",
+                                        "PESEL: ", "Gender [m - male, f - female, o - other]: "};
+    std::vector<std::string> tempStudentData(7);
+
+    for(size_t n = 0; n < descriptionStudentData.size(); ++n)
     {
-        std::cout<<"Error. It is not a index number. Please enter it again. \n";
-        std::cout<<"Index number: "; std::cin>>std::ws;std::getline(std::cin, indexNumber_);
+        std::cout << descriptionStudentData[n];
+        std::cin >> std::ws;
+        std::getline(std::cin, tempStudentData[n]);
     }
-    std::cout<<"PESEL: "; std::cin>>std::ws;std::getline(std::cin, PESEL_);
-    while(!isNumber(PESEL_))
-    {
-        std::cout<<"Error. It is not a PESEL. Please enter it again. \n";
-        std::cout<<"PESEL number: "; std::cin>>std::ws;std::getline(std::cin, PESEL_);
-    }
-    std::cout<<"Gender [male - m, female - f, other - o]: ";
-    std::cin>>std::ws;std::getline(std::cin,gender_);
+    //return Student::Student{};
+
+    // std::cout<<"Name: "; std::cin >> std::ws;
+    // std::getline(std::cin,name_);
+    // studentData_.push_back(&name_);
+
+    // std::cout<<"Surname: "; std::cin >> std::ws;
+    // std::getline(std::cin,surname_);
+
+    // std::cout<<"Address: "; std::cin >> std::ws;
+    // std::getline(std::cin,address_);
+
+    // std::string temp;
+    // std::cout<<"Index number: "; std::cin>>std::ws;std::getline(std::cin, indexNumber_);
+    // while(!isNumber(indexNumber_))
+    // {
+    //     std::cout<<"Error. It is not a index number. Please enter it again. \n";
+    //     std::cout<<"Index number: "; std::cin>>std::ws;std::getline(std::cin, indexNumber_);
+    // }
+
+    // std::cout<<"PESEL: "; std::cin>>std::ws;std::getline(std::cin, PESEL_);
+    // while(!isNumber(PESEL_))
+    // {
+    //     std::cout<<"Error. It is not a PESEL. Please enter it again. \n";
+    //     std::cout<<"PESEL number: "; std::cin>>std::ws;std::getline(std::cin, PESEL_);
+    // }
+
+    // std::cout<<"Gender [male - m, female - f, other - o]: ";
+    // std::cin>>std::ws;std::getline(std::cin,gender_);
+
+
     return *this;
 }
 
-std::string Student::showStudent()
+std::shared_ptr<Student> makeStudent()
 {
-    std::cout << std::left << std::setw(13) << getName() << "| ";
-    std::cout << std::left << std::setw(13) << getSurname() << "| ";
-    std::cout << std::left << std::setw(13) << getAddress() << "| ";
-    std::cout << std::left << std::setw(13) << getIndexNumber() << "| ";
-    std::cout << std::left << std::setw(13) << getPESEL() << "| ";
-    std::cout << std::left << std::setw(13) << getGender() << "| \n";
+    std::vector<std::string> descriptionStudentData{"Name: ", "Surname: ", "Address: ", "Index number: ",
+                                        "PESEL: ", "Gender [m - male, f - female, o - other]: "};
+    std::vector<std::string> temp(7);
 
-    std::string studentData;
-    studentData += getName() + "|" + getSurname() + "|" + getAddress() + "|" +
-                getIndexNumber() + "|" + getPESEL() + "|" + getGender();
+    for(size_t n = 0; n < descriptionStudentData.size(); ++n)
+    {
+        std::cout << descriptionStudentData[n];
+        std::cin >> std::ws;
+        std::getline(std::cin, temp[n]);
+    }
+    std::shared_ptr<Student> student{new Student{temp[0], temp[1], temp[2], temp[3], temp[4], temp[5]}};
+    return student;
+}
 
-    return studentData;
+void Student::showStudent()
+{
+    for(auto data: this->studentData_)
+    {
+        std::cout << std::left << std::setw(13) << *data << "| ";
+    }
 }
 
 bool operator== (const Student & one,const Student & two)
@@ -203,24 +215,6 @@ bool operator== (const Student & one,const Student & two)
         return false;
     }
 }
-
-// std::string Student::genderToString(Student::Gender gender)
-// {
-//     switch (gender) 
-//     {
-//     case Student::Gender::male :
-//         return "male";
-//         break;
-//     case Student::Gender::female :
-//         return "female";
-//         break;
-//     case Student::Gender::other :
-//         return "other";
-//         break;
-//     default:
-//         return "";
-//     }
-// }
 
 
 

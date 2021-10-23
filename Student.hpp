@@ -1,25 +1,18 @@
 #pragma once
+#include <map>
 #include <iomanip>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
 class Student 
 {
 public:
-    // enum class Gender: char 
-    // {
-    //     male = 'm',
-    //     female = 'f',
-    //     other = 'o'
-    // };
-
-public:
     Student(){}
     Student(const std::string & name, const std::string & surname, const std::string & address, const std::string & indexNumber,
     const std::string & PESEL, const std::string & gender);
 
-    //friend Gender charToEnum(const char genderAbbreviation);
     friend bool isNumber(const std::string& s);
 
     std::string getName() const;
@@ -28,13 +21,17 @@ public:
     std::string getIndexNumber() const;
     std::string getPESEL() const;
     std::string getGender() const;
+    std::vector<std::string *> getStudentData() const;
 
-    void setPESEL(const std::string & PESEL);
-    void setIndexNumber(const std::string & indexNumber);
+    bool setPESEL(const std::string & PESEL);
+    bool setIndexNumber(const std::string & indexNumber);
+    void setGender(const std::string & gender);
 
     Student& fillInStudentData();
-    std::string showStudent();
-    friend bool operator== (const Student & one,const Student & two);
+    void showStudent();
+    //add function: changeStudentData
+    friend bool operator== (const Student & one, const Student & two);
+    friend std::shared_ptr<Student> makeStudent();
 
 
 private:
@@ -44,13 +41,13 @@ private:
     std::string indexNumber_{};
     std::string PESEL_{};
     std::string gender_{};
-    static std::vector<std::string> Gender;
+    std::vector<std::string *> studentData_{};
 public:
-    std::vector<std::string *> studentData{};
-
-    //std::string genderToString(Gender gender);
     bool validatePESEL(const std::string & PESEL);
+    static std::map<char,std::string> Gender;
 };
 
 bool isNumber(const std::string& numberString);
+
+
 

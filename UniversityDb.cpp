@@ -8,19 +8,48 @@
 #include <string>
 #include <vector>
 
-//void UniversityDb::writeToFile()
-void writeToFile(UniversityDb * university)
+std::shared_ptr<Student> makeStudent();
+
+void UniversityDb::writeToFile(const std::string & fileName)
 {
-    std::fstream database;
-    database.open("../data/nowy_plik.txt", std::ios::out | std::ios::trunc); //, std::ios::out | std::ios::trunc);
-    if(database.good())
+    std::fstream file; 
+    file.open("../data/"+fileName, std::ios::out | std::ios::trunc); //, std::ios::out | std::ios::trunc);
+    if(file.good())
     {
-        database << university->getUniversityName() << '\n';
-        for(auto student: university->getUniversityVector())
+        file << this->getUniversityName() << '\n';
+        for(auto student: this->getUniversityVector())
         {
-            student.showStudent();
+            for(auto data: student->getStudentData())
+            {
+                file << *data << "|";
+            }
+            file <<'\n';
         }
-        database.close();
+        file.close();
+    }
+    else
+    {
+        std::cout<< "File open error.\n";
+    }
+}
+
+void UniversityDb::loadFromFile(const std::string & fileName)
+{
+    std::fstream file; 
+    file.open("../data/"+fileName, std::ios::in ); //, std::ios::out | std::ios::trunc);
+    if(file.good())
+    {
+        std::string line;
+        size_t lineNr{};
+        while(std::getline(file,line))
+        {
+            if(lineNr)
+            {
+                continue;
+            }
+            std::cout << line << '\n';
+        }
+        file.close();
     }
     else
     {
@@ -36,14 +65,17 @@ std::string UniversityDb:: getUniversityName() const
 {
     return universityName_;
 }
-std::vector<Student>& UniversityDb::getUniversityVector() 
+
+std::vector<std::shared_ptr<Student>>& UniversityDb::getUniversityVector() 
 {
     return university_;
 }
-void UniversityDb::addNewStudent(const Student & student)
+
+void UniversityDb::addNewStudent(std::shared_ptr<Student> student)
 {
     university_.push_back(student);
 }
+
 void UniversityDb::printUniversity()
 {
     std::cout << std::right << std::setw(50) << universityName_ << "\n";
@@ -59,23 +91,23 @@ void UniversityDb::printUniversity()
     size_t number {1};
     for (auto student : university_) {
         std::cout << number++ << ". ";
-        student.showStudent();
+        student ->showStudent();
     }
     std::cout<<"\n";
 }
 
-std::vector<Student> UniversityDb::searchBySurname(std::string surname)
+std::vector<std::shared_ptr<Student>> UniversityDb::searchBySurname(std::string surname)
 {
     // make stl
-    std::vector<Student> students{};
+    std::vector<std::shared_ptr<Student>> students{};
     size_t number {1};
     bool isNoSurname{true};
     for (auto student : university_) {
-        if (student.getSurname() == surname) 
+        if (student->getSurname() == surname) 
         {
             students.push_back(student);
             std::cout << number++ << ". ";
-            student.showStudent();
+            student->showStudent();
             isNoSurname = false;
         }
     }
@@ -85,17 +117,18 @@ std::vector<Student> UniversityDb::searchBySurname(std::string surname)
     }
     return students;
 }
+
 Student UniversityDb::searchByPESEL(std::string PESEL)
 {
     // make stl
     Student person;
     bool isNoPESEL{true};
     for (auto student : university_) {
-        if (student.getPESEL() == PESEL) 
+        if (student->getPESEL() == PESEL) 
         {
-            person = student;
+            person = *student;
             std::cout << "1. ";
-            student.showStudent();
+            student->showStudent();
             isNoPESEL = false;
         }
     }
@@ -105,40 +138,40 @@ Student UniversityDb::searchByPESEL(std::string PESEL)
     }
     return person;
 }
-std::vector<Student>::iterator UniversityDb::searchByIndexNumber(std::string indexNumber)
+std::shared_ptr<Student> UniversityDb::searchByIndexNumber(std::string indexNumber)
 {
     // make stl
     std::cout << "Search by index number: " << indexNumber << "\n";
     for (auto it = university_.begin(); it != university_.end(); ++it) {
-        if (it->getIndexNumber() == indexNumber) {
+        if ((*it)->getIndexNumber() == indexNumber) {
             std::cout << "-----------------dziala"
                       << "\n";
-            return it;
+            return (*it);
         }
     }
-    return university_.end();
+    return nullptr;
 }
 void UniversityDb::sortBySurname()
 {
     std::sort(university_.begin(), university_.end(),
-        [](const Student& lhs, const Student& rhs) { return lhs.getSurname() < rhs.getSurname(); });
+        [](auto & lhs, auto & rhs) { return lhs->getSurname() < rhs->getSurname(); });
 }
 void UniversityDb::sortByPESEL()
 {
     std::sort(university_.begin(), university_.end(),
-        [](const Student& lhs, const Student& rhs) { return lhs.getPESEL() < rhs.getPESEL(); });
+        [](auto & lhs, auto & rhs) { return lhs->getPESEL() < rhs->getPESEL(); });
 }
-void UniversityDb::deleteByIndexNumber(std::string indexNumber)
-{
-    // leve one version
-    // make stl
-    std::cout << "Delete by index number: " << indexNumber << "\n";
-    for (auto it = university_.begin(); it != university_.end(); ++it) {
-        if (it->getIndexNumber() == indexNumber) {
-            std::cout << "ok";
-        }
-    }
-}
+// void UniversityDb::deleteByIndexNumber(std::string indexNumber)
+// {
+//     // leve one version
+//     // make stl
+//     std::cout << "Delete by index number: " << indexNumber << "\n";
+//     for (auto it = university_.begin(); it != university_.end(); ++it) {
+//         if (it->getIndexNumber() == indexNumber) {
+//             std::cout << "ok";
+//         }
+//     }
+// }
 void UniversityDb::deleteByIndexNumber2(std::string indexNumber)
 {
     //use stl
@@ -147,9 +180,9 @@ void UniversityDb::deleteByIndexNumber2(std::string indexNumber)
         return;
     }
     auto it = std::find_if(university_.begin(), university_.end(),
-        [&indexNumber](const Student& obj) { return obj.getIndexNumber() == indexNumber; });
+        [&indexNumber](auto obj) { return obj->getIndexNumber() == indexNumber; });
     std::cout<<"Deleted student: ";
-    it->showStudent();
+    (*it)->showStudent();
     if (it != university_.end())
         university_.erase(it);
     else
@@ -171,7 +204,9 @@ void mainMenu()
             std::cout<<"1. Create new database.\n";
             std::cout<<"2. Choose a database.\n";
             std::cout<<"3. Delete database.\n";
+            //std::cout<<"5. Load from file.\n";
             std::cout<<"4. Exit.\n\n";
+            
             //std::cout<<"4. Exit.\n\n"; save in file and read from file
             std::cout<<"Select an option number: ";
             std::cin >> position;
@@ -243,6 +278,11 @@ void mainMenu()
                 exitMainMenu = true;
                 break;
             }
+            // case 5:
+            // {
+                
+            //     break;
+            // }
             default:
             {
                 std::cout<<"Error. Please enter it again.\n";
@@ -269,6 +309,7 @@ void UniversityDb::universityMenu()
             std::cout<<"6. Search by PESEL.\n";
             std::cout<<"7. Delete by index number.\n";
             std::cout<<"8. Save database to file.\n";
+            std::cout<<"9. Load from file.\n";
             std::cout<<"0. Go to the main menu.\n";
             //std::cout<<"4. Exit.\n\n"; save in file and read from file
             std::cout<<"Select an option number: ";
@@ -298,10 +339,11 @@ void UniversityDb::universityMenu()
             case 2:
             {
                 std::cout<<"    "<<this->getUniversityName()<<"\n";
-                Student student;
+                //Student student;
                 std::cout<<"Adding new student: \n";
-                student.fillInStudentData();
-                this->addNewStudent(student);
+                //student.fillInStudentData();
+                this->addNewStudent(makeStudent());
+                //this->addNewStudent(student);
                 break;
             } 
             case 3:
@@ -354,9 +396,13 @@ void UniversityDb::universityMenu()
             case 8:
             {
                 std::cout<<"Save database to file: ";
-                // std::string name{};
-                // std::cin>>name;
-                writeToFile(this);
+                writeToFile("nowy_plik.txt");
+                break;
+            }
+            case 9:
+            {
+                std::cout<<"Load database from file: ";
+                loadFromFile("nowy_plik.txt");
                 break;
             }
             case 0:
@@ -373,7 +419,4 @@ void UniversityDb::universityMenu()
     }
 }
 
-// void UniversityDb::readFromFile(const std::string & fileName)
-// {
 
-// }
