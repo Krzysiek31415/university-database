@@ -25,9 +25,9 @@ public:
 
     void printUniversity();
 
-    std::vector<std::shared_ptr<Student>> searchBySurname(std::string surname);
+    std::vector<std::shared_ptr<Student>> searchBySurname(const std::string & surname);
 
-    Student searchByPESEL(std::string PESEL);
+    std::shared_ptr<Student> searchByPESEL(const std::string & PESEL);
 
     std::shared_ptr<Student> searchByIndexNumber(std::string indexNumber);
 
@@ -42,6 +42,7 @@ public:
     void writeToFile(const std::string & fileName);
 
     void loadFromFile(const std::string & fileName);
+    std::vector<std::string> lineToStringVector(std::string & line);
 };
 
 

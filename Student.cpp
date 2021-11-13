@@ -23,6 +23,7 @@ Student::Student(const std::string & name, const std::string & surname, const st
     : name_(name)
     , surname_(surname)
     , address_(address)
+    // ,PESEL_(setPESEL(PESEL)) ?? good? - > good
 {
     setPESEL(PESEL);
     setIndexNumber(indexNumber);

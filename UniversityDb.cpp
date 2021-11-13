@@ -8,18 +8,20 @@
 #include <string>
 #include <vector>
 
+// add class Interface with menu, mainmenu, enter input control data...
+
 std::shared_ptr<Student> makeStudent();
 
-void UniversityDb::writeToFile(const std::string & fileName)
+void UniversityDb::writeToFile(const std::string & path)
 {
     std::fstream file; 
-    file.open("../data/"+fileName, std::ios::out | std::ios::trunc); //, std::ios::out | std::ios::trunc);
+    file.open(path, std::ios::out | std::ios::trunc); //, std::ios::out | std::ios::trunc);
     if(file.good())
     {
-        file << this->getUniversityName() << '\n';
-        for(auto student: this->getUniversityVector())
+        //file << this->getUniversityName() << '\n';
+        for(const auto & student: this->getUniversityVector())
         {
-            for(auto data: student->getStudentData())
+            for(const auto & data: student->getStudentData())
             {
                 file << *data << "|";
             }
@@ -33,42 +35,40 @@ void UniversityDb::writeToFile(const std::string & fileName)
     }
 }
 
-void UniversityDb::loadFromFile(const std::string & fileName)
+std::vector<std::string> UniversityDb::lineToStringVector(std::string & line)
 {
-    //change fileName to path
+    // add if line has good data: if has 6 |
+    std::vector<std::string> data;
+    size_t beginData{};
+    size_t endData{};
+    while(endData != std::string::npos)
+    {
+        endData = line.find("|", beginData);
+        data.push_back(line.substr(beginData, endData-beginData));
+        beginData = endData + 1; 
+        if(endData == line.size()-1)
+            break;
+    }
+    return data;
+}
+
+void UniversityDb::loadFromFile(const std::string & path)
+{
     std::fstream file; 
-    file.open("../data/"+fileName, std::ios::in ); //, std::ios::out | std::ios::trunc);
+    file.open(path, std::ios::in ); 
     if(file.good())
     {
         std::string line;
-        //size_t lineNr{};
         while(!file.eof())
         {
             std::getline(file,line);
-            // if(lineNr++ == 0)
+            // if(lineNr++ == 0) // if in first line is name of University
             // {
             //     continue;
             // }
-            //std::cout << line << '\n';
-            // make function parseString
-            std::vector<std::string> data;
-            size_t beginData{};
-            size_t endData{};
-            //int i{};
-            while(endData != std::string::npos)// || endData < line.size())
-            {
-                endData = line.find("|", beginData);
-                //std::cout<<beginData<<" "<<endData<<'\n';
-                data.push_back(line.substr(beginData, endData-beginData));
-                beginData = endData + 1; 
-                //std::cout<<data[i++]<<'\n';
-                if(endData == line.size()-1)
-                    break;
-                
-            }
+            std::vector<std::string> data = lineToStringVector(line);
             std::shared_ptr<Student> student{new Student{ data[0], data[1], data[2], data[3], data[4], data[5]}};
             this->addNewStudent(student);
-            
         }
         file.close();
     }
@@ -100,68 +100,66 @@ void UniversityDb::addNewStudent(std::shared_ptr<Student> student)
 
 void UniversityDb::printUniversity()
 {
+    // add 
     std::cout << std::right << std::setw(50) << universityName_ << "\n";
     std::cout << std::cout.fill('-') << std::setw(95) << "\n   ";
     std::cout.fill(' ');
     std::vector<std::string> texts { "Name", "Surname", "Address", "Index Number", "PESEL", "Gender" };
-    for (auto data : texts) {
+    for (const auto & data : texts) {
         std::cout << std::left << std::setw(13) << data << "| ";
     }
     std::cout << std::cout.fill('-') << std::setw(93) << "\n";
     std::cout << "\n";
     std::cout.fill(' ');
     size_t number {1};
-    for (auto student : university_) {
+    for (const auto & student : university_) {
         std::cout << number++ << ". ";
         student ->showStudent();
     }
     std::cout<<"\n";
 }
 
-std::vector<std::shared_ptr<Student>> UniversityDb::searchBySurname(std::string surname)
+std::vector<std::shared_ptr<Student>> UniversityDb::searchBySurname(const std::string & surname)
 {
-    // make stl
     std::vector<std::shared_ptr<Student>> students{};
-    size_t number {1};
-    bool isNoSurname{true};
-    for (auto student : university_) {
-        if (student->getSurname() == surname) 
-        {
-            students.push_back(student);
-            std::cout << number++ << ". ";
-            student->showStudent();
-            isNoSurname = false;
-        }
-    }
-    if(isNoSurname)
-    {
+    std::copy_if( university_.begin(),
+                  university_.end(), 
+                  std::back_inserter(students),
+                  [&surname](auto elem)
+                  { return elem->getSurname() == surname;}
+    );
+    // move to menu::case or to class interface
+    if( !students.size() ){
         std::cout<<"There is no such surname.\n";
+    }
+    else{
+        for(const auto & student: students){
+            student->showStudent();
+        }
     }
     return students;
 }
 
-Student UniversityDb::searchByPESEL(std::string PESEL)
+std::shared_ptr<Student> UniversityDb::searchByPESEL(const std::string & PESEL)
 {
-    // make stl
-    Student person;
-    bool isNoPESEL{true};
-    for (auto student : university_) {
-        if (student->getPESEL() == PESEL) 
-        {
-            person = *student;
-            std::cout << "1. ";
-            student->showStudent();
-            isNoPESEL = false;
-        }
-    }
-    if(isNoPESEL)
-    {
+    auto student = std::find_if( university_.begin(), university_.end(), 
+                                 [&PESEL](auto elem)
+                                 { return elem->getPESEL() == PESEL;}
+    );
+    //move display student to menu::case or in future to class interface
+    if(student == university_.end()){
         std::cout<<"There is no such PESEL.\n";
+        return nullptr;
     }
-    return person;
+    else{
+        std::cout << "1. ";
+        (*student)->showStudent();
+    }
+    return *student;
 }
 std::shared_ptr<Student> UniversityDb::searchByIndexNumber(std::string indexNumber)
 {
+    // now not use
     // make stl
     std::cout << "Search by index number: " << indexNumber << "\n";
     for (auto it = university_.begin(); it != university_.end(); ++it) {
@@ -401,7 +399,7 @@ void UniversityDb::universityMenu()
             }
             case 6:
             {
-                std::cout<<"Search by PESEL:";
+                std::cout<<"Search by PESEL. \nEnter PESEL: ";
                 std::string PESEL{};
                 std::cin>>PESEL;
                 this->searchByPESEL(PESEL);
@@ -417,14 +415,20 @@ void UniversityDb::universityMenu()
             }
             case 8:
             {
-                std::cout<<"Save database to file: ";
-                writeToFile("nowy_plik.txt");
+                std::cout<<"Save database to file. \n[path]:";
+                std::string path{};
+                std::cin >> std::ws;
+                std::getline(std::cin, path);
+                writeToFile(path);
                 break;
             }
             case 9:
             {
-                std::cout<<"Load database from file: ";
-                loadFromFile("nowy_plik.txt");
+                std::cout<<"Load database from file. \n[path]: ";
+                std::string path{};
+                std::cin >> std::ws;
+                std::getline(std::cin, path);
+                loadFromFile(path);
                 break;
             }
             case 0:
@@ -434,7 +438,7 @@ void UniversityDb::universityMenu()
             }
             default:
             {
-                std::cout<<"Error. Please enter it again.\n";
+                std::cout<<"Error. Please enter option number again.\n";
                 break;
             }
         }
