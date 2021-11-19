@@ -5,7 +5,7 @@ project(University-database)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(FILES Student.cpp UniversityDb.cpp ) #//myTests.cpp)
+set(FILES Person.cpp Student2.cpp UniversityDb.cpp ) #//myTests.cpp)
 set(FLAGS PRIVATE -Wall -Wextra  -pedantic -Wconversion -O0) #-Werror
 
 add_library(${PROJECT_NAME}-lib STATIC ${FILES})

@@ -5,15 +5,16 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "Person.hpp"
 
 
 // add static size_t numberStudents; in constructor inc, in d-tor dec;
 // add class File{}, load to file, writ to file, parseString to vector, c-tor, d-tor,
 //                   add pole std::fstream
-class Student 
+class Student : public Person
 {
 public:
-    Student(){}
+    //Student(){}
     Student(const std::string & name, const std::string & surname, const std::string & address, const std::string & indexNumber,
     const std::string & PESEL, const std::string & gender);
 
@@ -31,6 +32,7 @@ public:
     bool setIndexNumber(const std::string & indexNumber);
     void setGender(const std::string & gender);
 
+
     Student& fillInStudentData();
     void showStudent();
     //add function: changeStudentData
@@ -39,12 +41,12 @@ public:
 
 
 private:
-    std::string name_{};
-    std::string surname_{};
-    std::string address_{};
-    std::string indexNumber_{};
-    std::string PESEL_{};
-    std::string gender_{};
+    // std::string name_{};
+    // std::string surname_{};
+    // std::string address_{};
+    // std::string indexNumber_{};
+    // std::string PESEL_{};
+    // std::string gender_{};
     std::vector<std::string *> studentData_{};
 public:
     bool validatePESEL(const std::string & PESEL);
